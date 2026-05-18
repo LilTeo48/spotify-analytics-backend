@@ -11,3 +11,28 @@ def get_top_genres_data():
 
 def get_listening_summary_data(): 
     return fake_summary   
+
+def add_top_artist_data(artist):
+    fake_artists.append({
+        "artist": artist.artist,
+        "streams": artist.streams
+    })
+
+    return {
+        "message": "Artist added successfully",
+        "artist": artist
+    }
+
+def delete_top_artist_data(artist_name: str):
+    for artist in fake_artists:
+        if artist["artist"].lower() == artist_name.lower():
+            fake_artists.remove(artist)
+
+            return {
+                "message": "Artist deleted successfully",
+                "artist": artist
+            }
+
+    return {
+        "message": "Artist not found"
+    }
