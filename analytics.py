@@ -6,8 +6,7 @@ from app.services.spotify_service import (
     get_top_genres_data,
     get_listening_summary_data,
     add_top_artist_data,
-    delete_top_artist_data,
-    update_top_artist_data
+    delete_top_artist_data
 )
 
 router = APIRouter()
@@ -21,11 +20,6 @@ def get_top_artists():
 @router.post("/top-artists")
 def add_top_artist(artist: Artist):
     return add_top_artist_data(artist)
-
-
-@router.put("/top-artists/{artist_name}")
-def update_top_artist(artist_name: str, updated_artist: Artist):
-    return update_top_artist_data(artist_name, updated_artist)
 
 
 @router.delete("/top-artists/{artist_name}")

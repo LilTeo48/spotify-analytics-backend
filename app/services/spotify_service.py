@@ -36,3 +36,22 @@ def delete_top_artist_data(artist_name: str):
     return {
         "message": "Artist not found"
     }
+
+def update_top_artist_data(artist_name: str, updated_artist):
+    for index, artist in enumerate(fake_artists):
+
+        if artist["artist"].lower() == artist_name.lower():
+
+            fake_artists[index] = {
+                "artist": updated_artist.artist,
+                "streams": updated_artist.streams
+            }
+
+            return {
+                "message": "Artist updated successfully",
+                "artist": fake_artists[index]
+            }
+
+    return {
+        "message": "Artist not found"
+    }
