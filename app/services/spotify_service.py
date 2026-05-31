@@ -1,57 +1,152 @@
-from app.database.db import fake_artists, fake_tracks, fake_genres, fake_summary
+from app.database.db import SessionLocal
+from app.models.db_models import ArtistDB, TrackDB, GenreDB
+from app.database.db import fake_summary
+
 
 def get_top_artists_data():
-    return {"top_artists": fake_artists}
+    db = SessionLocal()
+
+    try:
+        artists = db.query(ArtistDB).all()
+
+        result = [
+            {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+            for artist in artists
+        ]
+
+        return {"top_artists": result}
+
+    finally:
+        db.close()
+
 
 def get_top_tracks_data():
-    return {"top_tracks": fake_tracks}
+    db = SessionLocal()
+
+    try:
+        tracks = db.query(TrackDB).all()
+
+        result = [
+            {
+            "id": track.id,
+            "track": track.track,
+            "artist": track.artist,
+            "streams": track.streams
+            }
+            for track in tracks
+        ]
+
+        return {"top_tracks": result}
+    finally:
+        db.close()    
+
 
 def get_top_genres_data():
-    return {"top_genres": fake_genres}
+    db = SessionLocal()
 
-def get_listening_summary_data(): 
-    return fake_summary   
+    try:
+        genres = db.query(GenreDB).all()
+
+        result = [
+            {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+            for genre in genres
+        ]
+
+        return {"top_genres": result}
+
+    finally:
+        db.close()
+
+
+def get_listening_summary_data():
+    return fake_summary
+
 
 def add_top_artist_data(artist):
-    fake_artists.append({
-        "artist": artist.artist,
-        "streams": artist.streams
-    })
+    db = SessionLocal()
 
-    return {
-        "message": "Artist added successfully",
-        "artist": artist
-    }
+    try:
+        new_artist = ArtistDB(
+            artist=artist.artist,
+            streams=artist.streams
+        )
+
+        db.add(new_artist)
+        db.commit()
+        db.refresh(new_artist)
+
+        return {
+            "message": "Artist added successfully",
+            "artist": {
+                "id": new_artist.id,
+                "artist": new_artist.artist,
+                "streams": new_artist.streams
+            }
+        }
+
+    finally:
+        db.close()
+
 
 def delete_top_artist_data(artist_name: str):
-    for artist in fake_artists:
-        if artist["artist"].lower() == artist_name.lower():
-            fake_artists.remove(artist)
+    db = SessionLocal()
 
-            return {
-                "message": "Artist deleted successfully",
-                "artist": artist
-            }
+    try:
+        artist = (
+            db.query(ArtistDB)
+            .filter(ArtistDB.artist.ilike(artist_name))
+            .first()
+        )
 
-    return {
-        "message": "Artist not found"
-    }
+        if not artist:
+            return {"message": "Artist not found"}
+
+        db.delete(artist)
+        db.commit()
+
+        return {
+            "message": "Artist deleted successfully"
+        }
+
+    finally:
+        db.close()
+
 
 def update_top_artist_data(artist_name: str, updated_artist):
-    for index, artist in enumerate(fake_artists):
+    db = SessionLocal()
 
-        if artist["artist"].lower() == artist_name.lower():
+    try:
+        artist = (
+            db.query(ArtistDB)
+            .filter(ArtistDB.artist.ilike(artist_name))
+            .first()
+        )
 
-            fake_artists[index] = {
-                "artist": updated_artist.artist,
-                "streams": updated_artist.streams
+        if not artist:
+            return {"message": "Artist not found"}
+
+        artist.artist = updated_artist.artist
+        artist.streams = updated_artist.streams
+
+        db.commit()
+        db.refresh(artist)
+
+        return {
+            "message": "Artist updated successfully",
+            "artist": {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
             }
+        }
 
-            return {
-                "message": "Artist updated successfully",
-                "artist": fake_artists[index]
-            }
-
-    return {
-        "message": "Artist not found"
-    }
+    finally:
+        db.close()
