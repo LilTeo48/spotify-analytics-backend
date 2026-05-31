@@ -67,7 +67,38 @@ def get_top_genres_data():
 
 
 def get_listening_summary_data():
-    return fake_summary
+    db = SessionLocal()
+
+    try:
+        artists = db.query(ArtistDB).all()
+        tracks = db.query(TrackDB).all()
+        genres = db.query(GenreDB).all()
+
+        total_streams = sum(artist.streams for artist in artists)
+        total_tracks_streamed = sum(track.streams for track in tracks)
+
+        favorite_artist = max(
+            artists,
+            key=lambda artist: artist.streams
+        ).artist if artists else None
+
+        favorite_genre = max(
+            genres,
+            key=lambda genre: genre.hours_listened
+        ).genre if genres else None
+
+        total_hours = sum(genre.hours_listened for genre in genres)
+
+        return {
+            "total_hours": total_hours,
+            "favorite_artist": favorite_artist,
+            "favorite_genre": favorite_genre,
+            "total_tracks_streamed": total_tracks_streamed,
+            "total_artist_streams": total_streams
+        }
+
+    finally:
+        db.close()
 
 
 def add_top_artist_data(artist):
