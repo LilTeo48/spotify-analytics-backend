@@ -1,6 +1,6 @@
 from app.database.db import SessionLocal
 from app.models.db_models import ArtistDB, TrackDB, GenreDB
-from app.database.db import fake_summary
+
 
 
 def get_top_artists_data():
@@ -177,6 +177,91 @@ def update_top_artist_data(artist_name: str, updated_artist):
                 "artist": artist.artist,
                 "streams": artist.streams
             }
+        }
+
+    finally:
+        db.close()
+
+def add_top_track_data(track):
+    db = SessionLocal()
+
+    try:
+        new_track = TrackDB(
+            track=track.track,
+            artist=track.artist,
+            streams=track.streams
+        )
+
+        db.add(new_track)
+        db.commit()
+        db.refresh(new_track)
+
+        return {
+            "message": "Track added successfully",
+            "track": {
+                "id": new_track.id,
+                "track": new_track.track,
+                "artist": new_track.artist,
+                "streams": new_track.streams
+            }
+        }
+
+    finally:
+        db.close()
+
+
+def update_top_track_data(track_name: str, updated_track):
+    db = SessionLocal()
+
+    try:
+        track = (
+            db.query(TrackDB)
+            .filter(TrackDB.track.ilike(track_name))
+            .first()
+        )
+
+        if not track:
+            return {"message": "Track not found"}
+
+        track.track = updated_track.track
+        track.artist = updated_track.artist
+        track.streams = updated_track.streams
+
+        db.commit()
+        db.refresh(track)
+
+        return {
+            "message": "Track updated successfully",
+            "track": {
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+        }
+
+    finally:
+        db.close()
+
+
+def delete_top_track_data(track_name: str):
+    db = SessionLocal()
+
+    try:
+        track = (
+            db.query(TrackDB)
+            .filter(TrackDB.track.ilike(track_name))
+            .first()
+        )
+
+        if not track:
+            return {"message": "Track not found"}
+
+        db.delete(track)
+        db.commit()
+
+        return {
+            "message": "Track deleted successfully"
         }
 
     finally:
