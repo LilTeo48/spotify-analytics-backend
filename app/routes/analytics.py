@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.schemas import Artist, Track
+from app.models.schemas import Artist, Track, Genre
 from app.services.spotify_service import (
     get_top_artists_data,
     get_top_tracks_data,
@@ -10,7 +10,10 @@ from app.services.spotify_service import (
     update_top_artist_data,
     add_top_track_data,
     update_top_track_data,
-    delete_top_track_data
+    delete_top_track_data,
+    add_top_genre_data,
+    update_top_genre_data,
+    delete_top_genre_data
 )
 
 router = APIRouter()
@@ -59,6 +62,20 @@ def delete_top_track(track_name: str):
 @router.get("/top-genres")
 def get_top_genres():
     return get_top_genres_data()
+
+@router.post("/top-genres")
+def add_top_genre(genre: Genre):
+    return add_top_genre_data(genre)
+
+
+@router.put("/top-genres/{genre_name}")
+def update_top_genre(genre_name: str, updated_genre: Genre):
+    return update_top_genre_data(genre_name, updated_genre)
+
+
+@router.delete("/top-genres/{genre_name}")
+def delete_top_genre(genre_name: str):
+    return delete_top_genre_data(genre_name)
 
 
 @router.get("/listening-summary")

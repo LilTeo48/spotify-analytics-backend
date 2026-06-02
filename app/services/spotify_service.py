@@ -266,3 +266,84 @@ def delete_top_track_data(track_name: str):
 
     finally:
         db.close()
+
+def add_top_genre_data(genre):
+    db = SessionLocal()
+
+    try:
+        new_genre = GenreDB(
+            genre=genre.genre,
+            hours_listened=genre.hours_listened
+        )
+
+        db.add(new_genre)
+        db.commit()
+        db.refresh(new_genre)
+
+        return {
+            "message": "Genre added successfully",
+            "genre": {
+                "id": new_genre.id,
+                "genre": new_genre.genre,
+                "hours_listened": new_genre.hours_listened
+            }
+        }
+
+    finally:
+        db.close()
+
+
+def update_top_genre_data(genre_name: str, updated_genre):
+    db = SessionLocal()
+
+    try:
+        genre = (
+            db.query(GenreDB)
+            .filter(GenreDB.genre.ilike(genre_name))
+            .first()
+        )
+
+        if not genre:
+            return {"message": "Genre not found"}
+
+        genre.genre = updated_genre.genre
+        genre.hours_listened = updated_genre.hours_listened
+
+        db.commit()
+        db.refresh(genre)
+
+        return {
+            "message": "Genre updated successfully",
+            "genre": {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+        }
+
+    finally:
+        db.close()
+
+
+def delete_top_genre_data(genre_name: str):
+    db = SessionLocal()
+
+    try:
+        genre = (
+            db.query(GenreDB)
+            .filter(GenreDB.genre.ilike(genre_name))
+            .first()
+        )
+
+        if not genre:
+            return {"message": "Genre not found"}
+
+        db.delete(genre)
+        db.commit()
+
+        return {
+            "message": "Genre deleted successfully"
+        }
+
+    finally:
+        db.close()        
