@@ -20,6 +20,7 @@ from app.services.spotify_service import (
     get_top_artist_analytics,
     get_top_track_analytics,
     get_top_genre_analytics,
+    get_dashboard_analytics,
 )
 
 router = APIRouter()
@@ -112,3 +113,7 @@ def get_top_track():
 @router.get("/analytics/top-genre")
 def get_top_genre():
     return get_top_genre_analytics()
+
+@router.get("/analytics/dashboard")
+def get_dashboard():
+    return get_dashboard_analytics()    

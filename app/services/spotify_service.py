@@ -495,3 +495,47 @@ def get_top_genre_analytics():
 
     finally:
         db.close()
+
+def get_dashboard_analytics():
+    db = SessionLocal()
+
+    try:
+        artists = db.query(ArtistDB).all()
+        tracks = db.query(TrackDB).all()
+        genres = db.query(GenreDB).all()
+
+        return {
+            "artist_count": len(artists),
+            "track_count": len(tracks),
+            "genre_count": len(genres),
+
+            "total_artist_streams":
+                sum(artist.streams for artist in artists),
+
+            "total_track_streams":
+                sum(track.streams for track in tracks),
+
+            "total_hours_listened":
+                sum(genre.hours_listened for genre in genres),
+
+            "top_artist":
+                max(
+                    artists,
+                    key=lambda artist: artist.streams
+                ).artist if artists else None,
+
+            "top_track":
+                max(
+                    tracks,
+                    key=lambda track: track.streams
+                ).track if tracks else None,
+
+            "top_genre":
+                max(
+                    genres,
+                    key=lambda genre: genre.hours_listened
+                ).genre if genres else None
+        }
+
+    finally:
+        db.close()       
