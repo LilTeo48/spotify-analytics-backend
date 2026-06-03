@@ -1,41 +1,43 @@
 # Spotify Analytics Backend
 
-A backend API built with FastAPI, SQLAlchemy, and SQLite that simulates Spotify listening analytics. The application provides CRUD operations for artists, tracks, and genres while generating listening insights through aggregated analytics endpoints.
+A backend analytics API built with FastAPI, SQLAlchemy, and SQLite that provides Spotify-inspired music analytics, search functionality, CRUD operations, and KPI reporting.
 
 ## Features
 
 ### Artist Management
 
 * Create artists
-* Read artist data
+* View artists
 * Update artist information
 * Delete artists
+* Search artists by name
 
 ### Track Management
 
 * Create tracks
-* Read track data
+* View tracks
 * Update track information
 * Delete tracks
+* Search tracks by name
 
 ### Genre Management
 
 * Create genres
-* Read genre data
+* View genres
 * Update genre information
 * Delete genres
+* Search genres by name
 
-### Listening Analytics
+### Analytics & Reporting
 
-* Top Artists
-* Top Tracks
-* Top Genres
-* Listening Summary
-* Favorite Artist Calculation
-* Favorite Genre Calculation
-* Total Listening Hours
-* Total Track Streams
-* Total Artist Streams
+* Listening summary dashboard
+* Top artist analytics
+* Top track analytics
+* Top genre analytics
+* Dashboard KPI endpoint
+* Total streams analytics
+* Total listening hours analytics
+* Database record counts
 
 ## Tech Stack
 
@@ -43,87 +45,54 @@ A backend API built with FastAPI, SQLAlchemy, and SQLite that simulates Spotify 
 * FastAPI
 * SQLAlchemy
 * SQLite
-* Pydantic
 * Uvicorn
-* REST APIs
-* Git & GitHub
-
-## Project Structure
-
-```text
-spotify-analytics-backend/
-│
-├── app/
-│   ├── database/
-│   │   ├── db.py
-│   │   ├── init_db.py
-│   │   └── seed_db.py
-│   │
-│   ├── models/
-│   │   ├── db_models.py
-│   │   └── schemas.py
-│   │
-│   ├── routes/
-│   │   └── analytics.py
-│   │
-│   ├── services/
-│   │   └── spotify_service.py
-│   │
-│   └── main.py
-│
-├── spotify_analytics.db
-├── requirements.txt
-└── README.md
-```
 
 ## API Endpoints
 
 ### Artists
 
-| Method | Endpoint                   |
-| ------ | -------------------------- |
-| GET    | /top-artists               |
-| POST   | /top-artists               |
-| PUT    | /top-artists/{artist_name} |
-| DELETE | /top-artists/{artist_name} |
+| Method | Endpoint                          |
+| ------ | --------------------------------- |
+| GET    | /top-artists                      |
+| POST   | /top-artists                      |
+| PUT    | /top-artists/{artist_name}        |
+| DELETE | /top-artists/{artist_name}        |
+| GET    | /top-artists/search/{artist_name} |
 
 ### Tracks
 
-| Method | Endpoint                 |
-| ------ | ------------------------ |
-| GET    | /top-tracks              |
-| POST   | /top-tracks              |
-| PUT    | /top-tracks/{track_name} |
-| DELETE | /top-tracks/{track_name} |
+| Method | Endpoint                        |
+| ------ | ------------------------------- |
+| GET    | /top-tracks                     |
+| POST   | /top-tracks                     |
+| PUT    | /top-tracks/{track_name}        |
+| DELETE | /top-tracks/{track_name}        |
+| GET    | /top-tracks/search/{track_name} |
 
 ### Genres
 
-| Method | Endpoint                 |
-| ------ | ------------------------ |
-| GET    | /top-genres              |
-| POST   | /top-genres              |
-| PUT    | /top-genres/{genre_name} |
-| DELETE | /top-genres/{genre_name} |
+| Method | Endpoint                        |
+| ------ | ------------------------------- |
+| GET    | /top-genres                     |
+| POST   | /top-genres                     |
+| PUT    | /top-genres/{genre_name}        |
+| DELETE | /top-genres/{genre_name}        |
+| GET    | /top-genres/search/{genre_name} |
 
 ### Analytics
 
-| Method | Endpoint           |
-| ------ | ------------------ |
-| GET    | /listening-summary |
+| Method | Endpoint                 |
+| ------ | ------------------------ |
+| GET    | /listening-summary       |
+| GET    | /analytics/top-artist    |
+| GET    | /analytics/top-track     |
+| GET    | /analytics/top-genre     |
+| GET    | /analytics/dashboard     |
+| GET    | /analytics/counts        |
+| GET    | /analytics/total-streams |
+| GET    | /analytics/total-hours   |
 
-## Sample Listening Summary Response
-
-```json
-{
-  "total_hours": 257,
-  "favorite_artist": "Future",
-  "favorite_genre": "Hip-Hop",
-  "total_tracks_streamed": 2385,
-  "total_artist_streams": 5925
-}
-```
-
-## Installation
+## Running Locally
 
 Clone the repository:
 
@@ -132,10 +101,11 @@ git clone https://github.com/LilTeo48/spotify-analytics-backend.git
 cd spotify-analytics-backend
 ```
 
-Create a virtual environment:
+Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
+
 source .venv/bin/activate
 ```
 
@@ -145,20 +115,13 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Initialize and seed the database:
-
-```bash
-python app/database/init_db.py
-python app/database/seed_db.py
-```
-
-Run the application:
+Run the API:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Open Swagger Documentation:
+Open Swagger documentation:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -166,16 +129,18 @@ http://127.0.0.1:8000/docs
 
 ## Future Enhancements
 
-* Search endpoints for artists, tracks, and genres
-* PostgreSQL migration
-* Docker support
+* Filtering endpoints
+* Sorting endpoints
+* Pagination
+* PostgreSQL support
+* Docker deployment
 * Authentication and authorization
 * Cloud deployment
-* Real Spotify API integration
 
 ## Author
 
 Tyler Chadwick
+
 
 GitHub: https://github.com/LilTeo48
 
