@@ -24,6 +24,9 @@ from app.services.spotify_service import (
     get_counts_analytics,
     get_total_streams_analytics,
     get_total_hours_analytics,
+    get_top_3_artists_analytics,
+    get_top_3_tracks_analytics,
+    get_top_3_genres_analytics,
 )
 
 router = APIRouter()
@@ -132,3 +135,17 @@ def get_total_streams():
 @router.get("/analytics/total-hours")
 def get_total_hours():
     return get_total_hours_analytics()
+
+@router.get("/analytics/top-3-artists")
+def get_top_3_artists():
+    return get_top_3_artists_analytics()
+
+
+@router.get("/analytics/top-3-tracks")
+def get_top_3_tracks():
+    return get_top_3_tracks_analytics()
+
+
+@router.get("/analytics/top-3-genres")
+def get_top_3_genres():
+    return get_top_3_genres_analytics()   

@@ -580,5 +580,79 @@ def get_total_hours_analytics():
         }
 
     finally:
-        db.close()           
+        db.close()
+
+def get_top_3_artists_analytics():
+    db = SessionLocal()
+
+    try:
+        artists = (
+            db.query(ArtistDB)
+            .order_by(ArtistDB.streams.desc())
+            .limit(3)
+            .all()
+        )
+
+        result = [
+            {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+            for artist in artists
+        ]
+
+        return {"top_3_artists": result}
+    finally:
+        db.close()
+
+def get_top_3_tracks_analytics():
+    db = SessionLocal()
+
+    try:
+        tracks = (
+            db.query(TrackDB)
+            .order_by(TrackDB.streams.desc())
+            .limit(3)
+            .all()
+        )
+
+        result = [
+            {
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+            for track in tracks
+        ]
+
+        return {"top_3_tracks": result}
+
+    finally:
+        db.close()
+
+def get_top_3_genres_analytics():
+    db = SessionLocal()
+
+    try:
+        genres = (
+            db.query(GenreDB)
+            .order_by(GenreDB.hours_listened.desc())
+            .limit(3)
+            .all()
+        )
+
+        result = [
+            {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+            for genre in genres
+        ]
+        return {"top_3_genres": result}
+    finally:
+        db.close()    
+        
 
