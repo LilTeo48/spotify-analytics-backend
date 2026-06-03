@@ -720,4 +720,152 @@ def get_average_genre_hours_analytics():
     finally:
         db.close()        
         
+def get_least_streamed_artist_analytics():
+    db = SessionLocal()
+
+    try:
+        artist = (
+            db.query(ArtistDB)
+            .order_by(ArtistDB.streams.asc())
+            .first()
+        )
+
+        if not artist:
+            return {"message": "No artists found"}
+
+        return {
+            "least_streamed_artist": {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+        }
+    finally:
+        db.close()
+
+def get_least_streamed_track_analytics():
+    db = SessionLocal()
+
+    try:
+        track = (
+            db.query(TrackDB)
+            .order_by(TrackDB.streams.asc())
+            .first()
+        )
+
+        if not track:
+            return{"message": "No tracks found"}
+
+        return {
+            "least_streamed_track": {
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+        }
+    finally:
+        db.close()
+
+def get_least_listened_genre_analytics():
+    db = SessionLocal()
+
+    try:
+        genre = (
+        db.query(GenreDB)
+        .order_by(GenreDB.hours_listened.asc())
+        .first()
+        )
+        if not genre:
+            return {"message": "No genres found"}
+
+        return {
+            "least_listened_genre": {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+        }
+
+    finally:
+        db.close()
+
+def get_artist_stream_ranking_analytics():
+    db = SessionLocal()
+
+    try:
+        artists = (
+            db.query(ArtistDB)
+            .order_by(ArtistDB.streams.desc())
+            .all()
+        )
+
+        result = [
+            {
+                "rank": index + 1,
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+            for index, artist in enumerate(artists)
+        ]
+
+        return {"artist_stream_ranking": result}
+
+    finally:
+        db.close()
+
+
+def get_track_stream_ranking_analytics():
+    db = SessionLocal()
+
+    try:
+        tracks = (
+            db.query(TrackDB)
+            .order_by(TrackDB.streams.desc())
+            .all()
+        )
+
+        result = [
+            {
+                "rank": index + 1,
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+            for index, track in enumerate(tracks)
+        ]
+
+        return {"track_stream_ranking": result}
+
+    finally:
+        db.close()
+
+
+def get_genre_ranking_analytics():
+    db = SessionLocal()
+
+    try:
+        genres = (
+            db.query(GenreDB)
+            .order_by(GenreDB.hours_listened.desc())
+            .all()
+        )
+
+        result = [
+            {
+                "rank": index + 1,
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+            for index, genre in enumerate(genres)
+        ]
+
+        return {"genre_ranking": result}
+
+    finally:
+        db.close()       
+        
 

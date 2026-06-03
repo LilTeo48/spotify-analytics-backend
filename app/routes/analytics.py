@@ -30,6 +30,12 @@ from app.services.spotify_service import (
     get_average_artist_streams_analytics,
     get_average_track_streams_analytics,
     get_average_genre_hours_analytics,
+    get_least_streamed_artist_analytics,
+    get_least_streamed_track_analytics,
+    get_least_listened_genre_analytics,
+    get_artist_stream_ranking_analytics,
+    get_track_stream_ranking_analytics,
+    get_genre_ranking_analytics,
 )
 
 router = APIRouter()
@@ -164,3 +170,31 @@ def get_average_track_streams():
 @router.get("/analytics/average-genre-hours")
 def get_average_genre_hours():
     return get_average_genre_hours_analytics()
+
+@router.get("/analytics/least-streamed-artist")
+def get_least_streamed_artist():
+    return get_least_streamed_artist_analytics()
+
+
+@router.get("/analytics/least-streamed-track")
+def get_least_streamed_track():
+    return get_least_streamed_track_analytics()
+
+
+@router.get("/analytics/least-listened-genre")
+def get_least_listened_genre():
+    return get_least_listened_genre_analytics()
+
+@router.get("/analytics/artist-stream-ranking")
+def get_artist_stream_ranking():
+    return get_artist_stream_ranking_analytics()
+
+
+@router.get("/analytics/track-stream-ranking")
+def get_track_stream_ranking():
+    return get_track_stream_ranking_analytics()
+
+
+@router.get("/analytics/genre-ranking")
+def get_genre_ranking():
+    return get_genre_ranking_analytics()        
