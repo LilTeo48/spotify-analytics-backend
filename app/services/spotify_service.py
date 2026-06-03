@@ -419,4 +419,79 @@ def search_genre_data(genre_name: str):
 
         return {"results": result}
     finally:
-        db.close()                                           
+        db.close()
+
+def get_top_artist_analytics():
+    db = SessionLocal()
+
+    try:
+        artist = (
+            db.query(ArtistDB)
+            .order_by(ArtistDB.streams.desc())
+            .first()
+        )
+
+        if not artist:
+            return {"message": "No artists found"}
+
+        return {
+            "top_artist": {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+        }
+
+    finally:
+        db.close()
+
+
+def get_top_track_analytics():
+    db = SessionLocal()
+
+    try:
+        track = (
+            db.query(TrackDB)
+            .order_by(TrackDB.streams.desc())
+            .first()
+        )
+
+        if not track:
+            return {"message": "No tracks found"}
+
+        return {
+            "top_track": {
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+        }
+
+    finally:
+        db.close()
+
+
+def get_top_genre_analytics():
+    db = SessionLocal()
+
+    try:
+        genre = (
+            db.query(GenreDB)
+            .order_by(GenreDB.hours_listened.desc())
+            .first()
+        )
+
+        if not genre:
+            return {"message": "No genres found"}
+
+        return {
+            "top_genre": {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+        }
+
+    finally:
+        db.close()

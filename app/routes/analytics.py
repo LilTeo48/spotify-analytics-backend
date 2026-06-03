@@ -16,8 +16,10 @@ from app.services.spotify_service import (
     delete_top_genre_data,
     search_artist_data,
     search_track_data,
-    search_genre_data
-
+    search_genre_data,
+    get_top_artist_analytics,
+    get_top_track_analytics,
+    get_top_genre_analytics,
 )
 
 router = APIRouter()
@@ -97,3 +99,16 @@ def search_track(track_name: str):
 @router.get("/top-genres/search/{genre_name}")
 def search_genre(genre_name: str): 
     return search_genre_data(genre_name)
+
+@router.get("/analytics/top-artist")
+def get_top_artist():
+    return get_top_artist_analytics()
+
+@router.get("/analytics/top-track")
+def get_top_track():
+    return get_top_track_analytics()
+
+
+@router.get("/analytics/top-genre")
+def get_top_genre():
+    return get_top_genre_analytics()
