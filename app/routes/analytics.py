@@ -21,6 +21,9 @@ from app.services.spotify_service import (
     get_top_track_analytics,
     get_top_genre_analytics,
     get_dashboard_analytics,
+    get_counts_analytics,
+    get_total_streams_analytics,
+    get_total_hours_analytics,
 )
 
 router = APIRouter()
@@ -116,4 +119,16 @@ def get_top_genre():
 
 @router.get("/analytics/dashboard")
 def get_dashboard():
-    return get_dashboard_analytics()    
+    return get_dashboard_analytics()
+
+@router.get("/analytics/counts")
+def get_counts():
+    return get_counts_analytics()
+
+@router.get("/analytics/total-streams")
+def get_total_streams():
+    return get_total_streams_analytics()
+
+@router.get("/analytics/total-hours")
+def get_total_hours():
+    return get_total_hours_analytics()

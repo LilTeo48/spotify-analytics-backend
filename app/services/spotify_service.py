@@ -538,4 +538,47 @@ def get_dashboard_analytics():
         }
 
     finally:
-        db.close()       
+        db.close()
+
+def get_counts_analytics():
+    db = SessionLocal()
+
+    try:
+        return {
+            "artist_count": db.query(ArtistDB).count(),
+            "track_count": db.query(TrackDB).count(),
+            "genre_count": db.query(GenreDB).count()
+        }
+    finally:
+        db.close()
+
+def get_total_streams_analytics():
+    db = SessionLocal()
+
+    try:
+        artists = db.query(ArtistDB).all()
+        tracks = db.query(TrackDB).all()
+
+        return {
+            "total_artist_streams": sum(artist.streams for artist in artists),
+            "total_track_streams": sum(track.streams for track in tracks),
+            "combined_streams": (
+                sum(artist.streams for artist in artists)
+                + sum(track.streams for track in tracks)
+            )
+        }
+    finally:
+        db.close()
+def get_total_hours_analytics():
+    db = SessionLocal()
+
+    try:
+        genres = db.query(GenreDB).all()
+
+        return {
+            "total_hours_listened": sum(genre.hours_listened for genre in genres)
+        }
+
+    finally:
+        db.close()           
+
