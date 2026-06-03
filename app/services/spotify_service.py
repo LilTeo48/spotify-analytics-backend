@@ -346,4 +346,77 @@ def delete_top_genre_data(genre_name: str):
         }
 
     finally:
-        db.close()        
+        db.close() 
+
+def search_artist_data(artist_name: str): 
+    db = SessionLocal()
+
+    try:
+        artists = (
+            db.query(ArtistDB)
+            .filter(ArtistDB.artist.ilike(f"%{artist_name}%"))
+            .all()
+        )
+
+        result = [
+            {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+            for artist in artists
+        ]
+
+        return {"results": result}
+
+    finally: 
+        db.close()
+
+
+def search_track_data(track_name: str): 
+    db = SessionLocal()
+
+    try: 
+        tracks = (
+            db.query(TrackDB)
+            .filter(TrackDB.track.ilike(f"%{track_name}%"))
+            .all()
+        )
+
+        result = [
+            {
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+            for track in tracks
+        ]
+
+        return {"results": result}
+
+    finally:
+        db.close()
+
+def search_genre_data(genre_name: str): 
+    db = SessionLocal()
+
+    try: 
+        genres = (
+            db.query(GenreDB)
+            .filter(GenreDB.genre.ilike(f"%{genre_name}%"))
+            .all()
+        )
+
+        result = [
+            {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+            for genre in genres
+        ]
+
+        return {"results": result}
+    finally:
+        db.close()                                           
