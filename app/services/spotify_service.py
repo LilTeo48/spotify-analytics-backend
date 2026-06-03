@@ -653,6 +653,71 @@ def get_top_3_genres_analytics():
         ]
         return {"top_3_genres": result}
     finally:
-        db.close()    
+        db.close()
+
+def get_average_artist_streams_analytics():
+    db = SessionLocal()
+
+    try:
+        artists = db.query(ArtistDB).all()
+
+        if not artists:
+            return {"message": "No artists found"}
+
+        average = (
+            sum(artist.streams for artist in artists)
+            / len(artists)
+        )
+
+        return {
+            "average_artist_streams": round(average, 2)
+        }
+
+    finally:
+        db.close()
+
+
+def get_average_track_streams_analytics():
+    db = SessionLocal()
+
+    try:
+        tracks = db.query(TrackDB).all()
+
+        if not tracks:
+            return {"message": "No tracks found"}
+
+        average = (
+            sum(track.streams for track in tracks)
+            / len(tracks)
+        )
+
+        return {
+            "average_track_streams": round(average, 2)
+        }
+
+    finally:
+        db.close()
+
+
+def get_average_genre_hours_analytics():
+    db = SessionLocal()
+
+    try:
+        genres = db.query(GenreDB).all()
+
+        if not genres:
+            return {"message": "No genres found"}
+
+        average = (
+            sum(genre.hours_listened for genre in genres)
+            / len(genres)
+        )
+
+        return {
+            "average_genre_hours": round(average, 2)
+        }
+
+    finally:
+        db.close()        
         
 
