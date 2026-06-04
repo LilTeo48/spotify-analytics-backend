@@ -1,118 +1,78 @@
 # Spotify Analytics Backend
 
-A backend analytics API built with FastAPI, SQLAlchemy, and SQLite that provides Spotify-inspired music analytics, search functionality, CRUD operations, and KPI reporting.
+A backend analytics API built with FastAPI, SQLAlchemy, and PostgreSQL that provides insights into Spotify listening data through ranking, aggregation, filtering, and analytics endpoints.
 
 ## Features
 
-### Artist Management
-
-* Create artists
-* View artists
-* Update artist information
-* Delete artists
-* Search artists by name
-
-### Track Management
-
-* Create tracks
-* View tracks
-* Update track information
-* Delete tracks
-* Search tracks by name
-
-### Genre Management
-
-* Create genres
-* View genres
-* Update genre information
-* Delete genres
-* Search genres by name
-
-### Analytics & Reporting
-
-* Listening summary dashboard
-* Top artist analytics
-* Top track analytics
-* Top genre analytics
-* Dashboard KPI endpoint
-* Total streams analytics
-* Total listening hours analytics
-* Database record counts
+* FastAPI REST API
+* PostgreSQL Database Integration
+* SQLAlchemy ORM
+* Analytics Dashboard Endpoint
+* Ranking Endpoints
+* Aggregation Endpoints
+* Filtering Endpoints
+* Interactive Swagger Documentation
 
 ## Tech Stack
 
-* Python
+* Python 3
 * FastAPI
+* PostgreSQL
 * SQLAlchemy
-* SQLite
 * Uvicorn
+* Pydantic
 
-## API Endpoints
+## Project Structure
 
-### Artists
+```text
+spotify-analytics-backend/
+│
+├── app/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── database/
+│   └── main.py
+│
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
 
-| Method | Endpoint                          |
-| ------ | --------------------------------- |
-| GET    | /top-artists                      |
-| POST   | /top-artists                      |
-| PUT    | /top-artists/{artist_name}        |
-| DELETE | /top-artists/{artist_name}        |
-| GET    | /top-artists/search/{artist_name} |
+## Installation
 
-### Tracks
-
-| Method | Endpoint                        |
-| ------ | ------------------------------- |
-| GET    | /top-tracks                     |
-| POST   | /top-tracks                     |
-| PUT    | /top-tracks/{track_name}        |
-| DELETE | /top-tracks/{track_name}        |
-| GET    | /top-tracks/search/{track_name} |
-
-### Genres
-
-| Method | Endpoint                        |
-| ------ | ------------------------------- |
-| GET    | /top-genres                     |
-| POST   | /top-genres                     |
-| PUT    | /top-genres/{genre_name}        |
-| DELETE | /top-genres/{genre_name}        |
-| GET    | /top-genres/search/{genre_name} |
-
-### Analytics
-
-| Method | Endpoint                 |
-| ------ | ------------------------ |
-| GET    | /listening-summary       |
-| GET    | /analytics/top-artist    |
-| GET    | /analytics/top-track     |
-| GET    | /analytics/top-genre     |
-| GET    | /analytics/dashboard     |
-| GET    | /analytics/counts        |
-| GET    | /analytics/total-streams |
-| GET    | /analytics/total-hours   |
-
-## Running Locally
-
-Clone the repository:
+### Clone Repository
 
 ```bash
 git clone https://github.com/LilTeo48/spotify-analytics-backend.git
 cd spotify-analytics-backend
 ```
 
-Create and activate a virtual environment:
+### Create Virtual Environment
 
 ```bash
-python -m venv .venv
-
-source .venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-Install dependencies:
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+```
+
+## PostgreSQL Setup
+
+Create a PostgreSQL database:
+
+```sql
+CREATE DATABASE spotify_analytics;
+```
+
+Update the database connection in `db.py`:
+
+```python
+DATABASE_URL = "postgresql://username@localhost:5432/spotify_analytics"
 ```
 
 Run the API:
@@ -121,28 +81,148 @@ Run the API:
 uvicorn app.main:app --reload
 ```
 
-Open Swagger documentation:
+## API Documentation
+
+Swagger UI:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
+## Analytics Endpoints
+
+### Dashboard
+
+```http
+GET /analytics/dashboard
+```
+
+### Counts
+
+```http
+GET /analytics/counts
+```
+
+### Total Streams
+
+```http
+GET /analytics/total-streams
+```
+
+### Total Hours
+
+```http
+GET /analytics/total-hours
+```
+
+## Ranking Endpoints
+
+### Top Artist
+
+```http
+GET /analytics/top-artist
+```
+
+### Top Track
+
+```http
+GET /analytics/top-track
+```
+
+### Top Genre
+
+```http
+GET /analytics/top-genre
+```
+
+### Artist Rankings
+
+```http
+GET /analytics/artist-stream-ranking
+```
+
+### Track Rankings
+
+```http
+GET /analytics/track-stream-ranking
+```
+
+### Genre Rankings
+
+```http
+GET /analytics/genre-ranking
+```
+
+## Average Analytics
+
+```http
+GET /analytics/average-artist-streams
+GET /analytics/average-track-streams
+GET /analytics/average-genre-hours
+```
+
+## Lowest Analytics
+
+```http
+GET /analytics/least-streamed-artist
+GET /analytics/least-streamed-track
+GET /analytics/least-listened-genre
+```
+
+## Filtering Endpoints
+
+### Filter Artists by Streams
+
+```http
+GET /top-artists?min_streams=1000
+```
+
+### Filter Tracks by Artist
+
+```http
+GET /top-tracks?artist=Future
+```
+
+### Filter Genres by Hours
+
+```http
+GET /top-genres?min_hours=50
+```
+
+## Example Response
+
+```json
+{
+  "top_tracks": [
+    {
+      "id": 4,
+      "track": "Mask Off",
+      "artist": "Future",
+      "streams": 465
+    }
+  ]
+}
+```
+
 ## Future Enhancements
 
-* Filtering endpoints
-* Sorting endpoints
 * Pagination
-* PostgreSQL support
-* Docker deployment
-* Authentication and authorization
-* Cloud deployment
+* Sorting
+* Search Endpoints
+* Docker Support
+* Authentication & Authorization
+* Spotify API Integration
+* Real User Listening Data
+* Automated Testing
+* CI/CD Pipeline
 
 ## Author
 
 Tyler Chadwick
 
+GitHub:
+https://github.com/LilTeo48
 
-GitHub: https://github.com/LilTeo48
 
 LinkedIn: https://www.linkedin.com/in/tyler-chadwick-81b9a6275
 
