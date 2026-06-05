@@ -42,9 +42,11 @@ router = APIRouter()
 
 
 @router.get("/top-artists")
-def get_top_artists(min_streams: int = 0):
-    return get_top_artists_data(min_streams)
-
+def get_top_artists(
+    min_streams: int = 0,
+    limit: int = 10
+):
+    return get_top_artists_data(min_streams, limit)
 
 @router.post("/top-artists")
 def add_top_artist(artist: Artist):
@@ -60,11 +62,12 @@ def update_top_artist(artist_name: str, updated_artist: Artist):
 def delete_top_artist(artist_name: str):
     return delete_top_artist_data(artist_name)
 
-
 @router.get("/top-tracks")
-def get_top_tracks(artist: str = ""):
-    return get_top_tracks_data(artist)
-
+def get_top_tracks(
+    artist: str = "",
+    limit: int = 10
+):
+    return get_top_tracks_data(artist, limit)
 
 @router.post("/top-tracks")
 def add_top_track(track: Track):
@@ -80,10 +83,12 @@ def update_top_track(track_name: str, updated_track: Track):
 def delete_top_track(track_name: str):
     return delete_top_track_data(track_name)
 
-
 @router.get("/top-genres")
-def get_top_genres(min_hours: int = 0):
-    return get_top_genres_data(min_hours)
+def get_top_genres(
+    min_hours: int = 0,
+    limit: int = 10
+):
+    return get_top_genres_data(min_hours, limit)
 
 @router.post("/top-genres")
 def add_top_genre(genre: Genre):
