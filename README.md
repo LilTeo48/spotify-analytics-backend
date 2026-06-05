@@ -1,220 +1,101 @@
-# Spotify Analytics Backend
+## Spotify Analytics Backend 
 
-A backend analytics API built with FastAPI, SQLAlchemy, and PostgreSQL that provides insights into Spotify listening data through ranking, aggregation, filtering, and analytics endpoints.
+## Recent Updates
 
-## Features
+### PostgreSQL Migration
 
-* FastAPI REST API
-* PostgreSQL Database Integration
-* SQLAlchemy ORM
-* Analytics Dashboard Endpoint
-* Ranking Endpoints
-* Aggregation Endpoints
-* Filtering Endpoints
-* Interactive Swagger Documentation
+* Migrated the backend database from SQLite to PostgreSQL
+* Updated SQLAlchemy configuration for PostgreSQL connectivity
+* Seeded and verified data persistence using PostgreSQL
+* Successfully validated all existing endpoints after migration
 
-## Tech Stack
+### Analytics Features
 
-* Python 3
-* FastAPI
-* PostgreSQL
-* SQLAlchemy
-* Uvicorn
-* Pydantic
+* Dashboard analytics endpoint
+* Top artist, track, and genre analytics
+* Average listening metrics
+* Least streamed/listened metrics
+* Ranking endpoints
+* Top 3 artist, track, and genre endpoints
 
-## Project Structure
+### Filtering Endpoints
 
-```text
-spotify-analytics-backend/
-│
-├── app/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── database/
-│   └── main.py
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
-```
-
-## Installation
-
-### Clone Repository
-
-```bash
-git clone https://github.com/LilTeo48/spotify-analytics-backend.git
-cd spotify-analytics-backend
-```
-
-### Create Virtual Environment
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-## PostgreSQL Setup
-
-Create a PostgreSQL database:
-
-```sql
-CREATE DATABASE spotify_analytics;
-```
-
-Update the database connection in `db.py`:
-
-```python
-DATABASE_URL = "postgresql://username@localhost:5432/spotify_analytics"
-```
-
-Run the API:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-## API Documentation
-
-Swagger UI:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-## Analytics Endpoints
-
-### Dashboard
-
-```http
-GET /analytics/dashboard
-```
-
-### Counts
-
-```http
-GET /analytics/counts
-```
-
-### Total Streams
-
-```http
-GET /analytics/total-streams
-```
-
-### Total Hours
-
-```http
-GET /analytics/total-hours
-```
-
-## Ranking Endpoints
-
-### Top Artist
-
-```http
-GET /analytics/top-artist
-```
-
-### Top Track
-
-```http
-GET /analytics/top-track
-```
-
-### Top Genre
-
-```http
-GET /analytics/top-genre
-```
-
-### Artist Rankings
-
-```http
-GET /analytics/artist-stream-ranking
-```
-
-### Track Rankings
-
-```http
-GET /analytics/track-stream-ranking
-```
-
-### Genre Rankings
-
-```http
-GET /analytics/genre-ranking
-```
-
-## Average Analytics
-
-```http
-GET /analytics/average-artist-streams
-GET /analytics/average-track-streams
-GET /analytics/average-genre-hours
-```
-
-## Lowest Analytics
-
-```http
-GET /analytics/least-streamed-artist
-GET /analytics/least-streamed-track
-GET /analytics/least-listened-genre
-```
-
-## Filtering Endpoints
-
-### Filter Artists by Streams
+Filter data using query parameters:
 
 ```http
 GET /top-artists?min_streams=1000
-```
-
-### Filter Tracks by Artist
-
-```http
 GET /top-tracks?artist=Future
-```
-
-### Filter Genres by Hours
-
-```http
 GET /top-genres?min_hours=50
 ```
 
-## Example Response
+### Pagination Support
+
+Limit the number of results returned:
+
+```http
+GET /top-artists?limit=2
+GET /top-tracks?limit=2
+GET /top-genres?limit=2
+```
+
+### Current Project Statistics
+
+* 35+ REST API Endpoints
+* FastAPI Backend
+* PostgreSQL Database
+* SQLAlchemy ORM
+* CRUD Operations
+* Search Functionality
+* Analytics Dashboard
+* Ranking Metrics
+* Filtering Support
+* Pagination Support
+* Interactive Swagger Documentation
+
+## Example Dashboard Response
 
 ```json
 {
-  "top_tracks": [
-    {
-      "id": 4,
-      "track": "Mask Off",
-      "artist": "Future",
-      "streams": 465
-    }
-  ]
+  "artist_count": 5,
+  "track_count": 5,
+  "genre_count": 3,
+  "total_artist_streams": 5925,
+  "total_track_streams": 2385,
+  "total_hours_listened": 257,
+  "top_artist": "Future",
+  "top_track": "Blinding Lights",
+  "top_genre": "Hip-Hop"
 }
 ```
 
-## Future Enhancements
+## Upcoming Features
 
-* Pagination
+### Tier 6B – Sorting
+
+```http
+GET /top-artists?sort_order=asc
+GET /top-artists?sort_order=desc
+
+GET /top-tracks?sort_order=asc
+GET /top-tracks?sort_order=desc
+
+GET /top-genres?sort_order=asc
+GET /top-genres?sort_order=desc
+```
+
+### Future Roadmap
+
 * Sorting
-* Search Endpoints
+* Advanced Search
 * Docker Support
-* Authentication & Authorization
+* Pytest Integration
 * Spotify API Integration
-* Real User Listening Data
-* Automated Testing
+* Authentication & Authorization
 * CI/CD Pipeline
+* Cloud Deployment
+
+```
+```
 
 ## Author
 
