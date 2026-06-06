@@ -1,7 +1,11 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "postgresql://tylerchadwick@localhost:5432/spotify_analytics"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://tylerchadwick@localhost:5432/spotify_analytics"
+)
 
 engine = create_engine(DATABASE_URL)
 
