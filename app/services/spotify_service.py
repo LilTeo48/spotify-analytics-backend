@@ -4,18 +4,25 @@ from app.models.db_models import ArtistDB, TrackDB, GenreDB
 
 def get_top_artists_data(
     min_streams: int = 0,
-    limit: int = 10
+    limit: int = 10,
+    sort_order: str = "desc"
 ):
     db = SessionLocal()
 
     try:
-        artists = (
+        query = (
             db.query(ArtistDB)
             .filter(ArtistDB.streams >= min_streams)
-            .order_by(ArtistDB.streams.desc())
-            .limit(limit)
-            .all()
         )
+        if sort_order == "asc":
+            query = query.order_by(
+                ArtistDB.streams.asc()
+            )
+        else:
+            query = query.order_by(
+                ArtistDB.streams.desc()
+            )
+        artists = query.limit(limit).all()
 
         result = [
             {
@@ -29,11 +36,12 @@ def get_top_artists_data(
         return {"top_artists": result}
 
     finally:
-        db.close()
+        db.close()            
 
 def get_top_tracks_data(
     artist: str = "",
-    limit: int = 10
+    limit: int = 10,
+    sort_order: str = "desc"
 ):
     db = SessionLocal()
 
@@ -44,13 +52,12 @@ def get_top_tracks_data(
             query = query.filter(
                 TrackDB.artist.ilike(f"%{artist}%")
             )
+        if sort_order == "asc":
+            query = query.order_by(TrackDB.streams.asc())
+        else:
+            query = query.order_by(TrackDB.streams.desc())
 
-        tracks = (
-            query
-            .order_by(TrackDB.streams.desc())
-            .limit(limit)
-            .all()
-        )
+        tracks = query.limit(limit).all()
 
         result = [
             {
@@ -64,21 +71,34 @@ def get_top_tracks_data(
 
         return {"top_tracks": result}
 
-    finally:
-        db.close()
-   
+    finally: 
+        db.close()                
 
-def get_top_genres_data(min_hours: int = 0, limit: int = 10):
+def get_top_genres_data(
+    min_hours: int = 0,
+    limit: int = 10,
+    sort_order: str = "desc"
+):
     db = SessionLocal()
 
     try:
-        genres = (
+        query = (
             db.query(GenreDB)
-            .filter(GenreDB.hours_listened >= min_hours)
-            .order_by(GenreDB.hours_listened.desc())
-            .limit(limit)
-            .all()
+            .filter(
+                GenreDB.hours_listened >= min_hours
+            )
         )
+
+        if sort_order == "asc":
+            query = query.order_by(
+                GenreDB.hours_listened.asc()
+            )
+        else:
+            query = query.order_by(
+                GenreDB.hours_listened.desc()
+            )
+
+        genres = query.limit(limit).all()
 
         result = [
             {
@@ -91,8 +111,8 @@ def get_top_genres_data(min_hours: int = 0, limit: int = 10):
 
         return {"top_genres": result}
 
-    finally:
-        db.close()
+    finally: 
+        db.close()            
 
 
 def get_listening_summary_data():
