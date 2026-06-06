@@ -915,6 +915,83 @@ def get_genre_ranking_analytics():
         return {"genre_ranking": result}
 
     finally:
-        db.close()       
+        db.close() 
+
+def search_artists_data(q: str = ""):
+    db = SessionLocal()
+
+
+    try:
+        artists = (
+            db.query(ArtistDB)
+            .filter(
+                ArtistDB.artist.ilike(f"%{q}%")
+            )
+            .all()
+        )
+
+        result = [
+            {
+                "id": artist.id,
+                "artist": artist.artist,
+                "streams": artist.streams
+            }
+            for artist in artists
+        ]
+        return {"artists": result}
+    finally:
+        db.close()
+
+def search_tracks_data(q: str = ""):
+    db = SessionLocal()
+
+    try: 
+        tracks = (
+            db.query(TrackDB)
+            .filter(
+                TrackDB.track.ilike(f"%{q}%")
+            )
+            .all()
+        )
+
+        result = [
+            {
+                "id": track.id,
+                "track": track.track,
+                "artist": track.artist,
+                "streams": track.streams
+            }
+            for track in tracks
+        ]
+
+        return {"tracks": result}
+
+    finally:
+        db.close()
+
+def search_genres_data(q: str = ""):
+    db = SessionLocal()
+
+    try:
+        genres = (
+            db.query(GenreDB)
+            .filter(
+                GenreDB.genre.ilike(f"%{q}%")
+            )
+            .all()
+        )
+
+        result = [
+            {
+                "id": genre.id,
+                "genre": genre.genre,
+                "hours_listened": genre.hours_listened
+            }
+            for genre in genres
+        ]
+        return {"genres": result}
+    finally:
+        db.close()    
+
         
 

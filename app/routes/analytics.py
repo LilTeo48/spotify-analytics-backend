@@ -14,9 +14,6 @@ from app.services.spotify_service import (
     add_top_genre_data,
     update_top_genre_data,
     delete_top_genre_data,
-    search_artist_data,
-    search_track_data,
-    search_genre_data,
     get_top_artist_analytics,
     get_top_track_analytics,
     get_top_genre_analytics,
@@ -36,6 +33,9 @@ from app.services.spotify_service import (
     get_artist_stream_ranking_analytics,
     get_track_stream_ranking_analytics,
     get_genre_ranking_analytics,
+    search_artists_data,
+    search_tracks_data,
+    search_genres_data,
 )
 
 router = APIRouter()
@@ -112,18 +112,6 @@ def delete_top_genre(genre_name: str):
 @router.get("/listening-summary")
 def get_listening_summary():
     return get_listening_summary_data()
-
-@router.get("/top-artists/search/{artist_name}")
-def search_artist(artist_name: str):
-    return search_artist_data(artist_name)
-
-@router.get("/top-tracks/search/{track_name}")
-def search_track(track_name: str):
-    return search_track_data(track_name)
-
-@router.get("/top-genres/search/{genre_name}")
-def search_genre(genre_name: str): 
-    return search_genre_data(genre_name)
 
 @router.get("/analytics/top-artist")
 def get_top_artist():
@@ -206,4 +194,16 @@ def get_track_stream_ranking():
 
 @router.get("/analytics/genre-ranking")
 def get_genre_ranking():
-    return get_genre_ranking_analytics()        
+    return get_genre_ranking_analytics()
+
+@router.get("/search/artists")
+def search_artists(q: str = ""):
+    return search_artists_data(q)
+
+@router.get("/search/tracks")
+def search_tracks(q: str = ""):
+    return search_tracks_data(q)
+
+@router.get("/search/genres")
+def search_genres(q: str = ""):
+    return search_genres_data(q)
