@@ -3,6 +3,7 @@ from app.main import app
 
 client = TestClient(app)
 
+
 def test_dashboard_endpoint():
     response = client.get("/analytics/dashboard")
 
@@ -13,6 +14,7 @@ def test_dashboard_endpoint():
     assert "artist_count" in data
     assert "track_count" in data
     assert "genre_count" in data
+
 
 def test_artist_search_endpoint():
     response = client.get("/search/artists?q=dr")
