@@ -1,56 +1,164 @@
-## Spotify Analytics Backend 
+# Spotify Analytics Backend
 
-## Recent Updates
+A containerized REST API built with FastAPI, PostgreSQL, SQLAlchemy, Docker, and Docker Compose that provides Spotify-inspired analytics, search functionality, filtering, sorting, pagination, and CRUD operations.
 
-### PostgreSQL Migration
+The project demonstrates backend development, database management, API design, automated testing, and CI/CD workflows.
 
-* Migrated the backend database from SQLite to PostgreSQL
-* Updated SQLAlchemy configuration for PostgreSQL connectivity
-* Seeded and verified data persistence using PostgreSQL
-* Successfully validated all existing endpoints after migration
+---
 
-### Analytics Features
+## Features
 
-* Dashboard analytics endpoint
-* Top artist, track, and genre analytics
-* Average listening metrics
-* Least streamed/listened metrics
-* Ranking endpoints
-* Top 3 artist, track, and genre endpoints
+* CRUD operations for artists, tracks, and genres
+* Analytics dashboard endpoints
+* Search endpoints for artists, tracks, and genres
+* Filtering support
+* Sorting support
+* Pagination support
+* PostgreSQL database integration
+* Docker containerization
+* Docker Compose orchestration
+* Automated testing with Pytest
+* Continuous Integration with GitHub Actions
 
-### Filtering Endpoints
+---
 
-Filter data using query parameters:
+## Tech Stack
 
-```http
-GET /top-artists?min_streams=1000
-GET /top-tracks?artist=Future
-GET /top-genres?min_hours=50
-```
+### Backend
 
-### Pagination Support
+* FastAPI
+* Python 3.13
 
-Limit the number of results returned:
+### Database
 
-```http
-GET /top-artists?limit=2
-GET /top-tracks?limit=2
-GET /top-genres?limit=2
-```
-
-### Current Project Statistics
-
-* 35+ REST API Endpoints
-* FastAPI Backend
-* PostgreSQL Database
+* PostgreSQL
 * SQLAlchemy ORM
-* CRUD Operations
-* Search Functionality
-* Analytics Dashboard
-* Ranking Metrics
-* Filtering Support
-* Pagination Support
-* Interactive Swagger Documentation
+
+### DevOps
+
+* Docker
+* Docker Compose
+* GitHub Actions
+
+### Testing
+
+* Pytest
+* FastAPI TestClient
+
+---
+
+## API Endpoints
+
+### Artists
+
+```http
+GET    /top-artists
+POST   /top-artists
+PUT    /top-artists/{artist_name}
+DELETE /top-artists/{artist_name}
+```
+
+### Tracks
+
+```http
+GET    /top-tracks
+POST   /top-tracks
+PUT    /top-tracks/{track_name}
+DELETE /top-tracks/{track_name}
+```
+
+### Genres
+
+```http
+GET    /top-genres
+POST   /top-genres
+PUT    /top-genres/{genre_name}
+DELETE /top-genres/{genre_name}
+```
+
+### Search
+
+```http
+GET /search/artists
+GET /search/tracks
+GET /search/genres
+```
+
+### Analytics
+
+```http
+GET /analytics/dashboard
+GET /analytics/counts
+GET /analytics/top-artist
+GET /analytics/top-track
+GET /analytics/top-genre
+GET /analytics/total-streams
+GET /analytics/total-hours
+GET /analytics/top-3-artists
+GET /analytics/top-3-tracks
+GET /analytics/top-3-genres
+```
+
+---
+
+## Running with Docker
+
+Build and start services:
+
+```bash
+docker compose up --build
+```
+
+Access Swagger UI:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+## Running Tests
+
+Run all tests:
+
+```bash
+pytest
+```
+
+Current Test Coverage:
+
+* Dashboard endpoint
+* Artist search endpoint
+* Track search endpoint
+* Genre search endpoint
+* Artist filtering endpoint
+* Track filtering endpoint
+* Genre filtering endpoint
+* Artist sorting endpoint
+* Track sorting endpoint
+* Genre sorting endpoint
+
+Current Result:
+
+```text
+10 passed
+```
+
+---
+
+## Continuous Integration
+
+GitHub Actions automatically:
+
+* Installs dependencies
+* Runs Pytest
+* Validates code on every push
+
+Current CI Status:
+
+✅ Passing
+
+---
 
 ## Example Dashboard Response
 
@@ -68,34 +176,18 @@ GET /top-genres?limit=2
 }
 ```
 
-## Upcoming Features
+---
 
-### Tier 6B – Sorting
+## Future Enhancements
 
-```http
-GET /top-artists?sort_order=asc
-GET /top-artists?sort_order=desc
+* Deploy API to Render
+* Expand automated test coverage
+* Authentication and authorization
+* Redis caching
+* Advanced analytics endpoints
+* Frontend dashboard integration
+* Monitoring and logging
 
-GET /top-tracks?sort_order=asc
-GET /top-tracks?sort_order=desc
-
-GET /top-genres?sort_order=asc
-GET /top-genres?sort_order=desc
-```
-
-### Future Roadmap
-
-* Sorting
-* Advanced Search
-* Docker Support
-* Pytest Integration
-* Spotify API Integration
-* Authentication & Authorization
-* CI/CD Pipeline
-* Cloud Deployment
-
-```
-```
 
 ## Author
 
