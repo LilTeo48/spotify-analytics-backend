@@ -47,3 +47,68 @@ def test_genre_search_endpoint():
 
     assert "genres" in data
     assert isinstance(data["genres"], list)
+
+def test_top_artists_endpoint():
+    response = client.get("/top-artists")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "top_artists" in data
+    assert isinstance(data["top_artists"], list)
+
+
+def test_top_tracks_endpoint():
+    response = client.get("/top-tracks")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "top_tracks" in data
+    assert isinstance(data["top_tracks"], list)
+
+
+def test_top_genres_endpoint():
+    response = client.get("/top-genres")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "top_genres" in data
+    assert isinstance(data["top_genres"], list)
+
+
+def test_top_artists_filter_sort_limit():
+    response = client.get("/top-artists?min_streams=1000&limit=2&sort_order=desc")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "top_artists" in data
+    assert len(data["top_artists"]) <= 2
+
+
+def test_top_tracks_filter_sort_limit():
+    response = client.get("/top-tracks?artist=Future&limit=2&sort_order=desc")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "top_tracks" in data
+    assert isinstance(data["top_tracks"], list)
+
+
+def test_top_genres_filter_sort_limit():
+    response = client.get("/top-genres?min_hours=50&limit=2&sort_order=desc")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "top_genres" in data
+    assert len(data["top_genres"]) <= 2    
