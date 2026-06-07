@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.schemas import Artist, Track, Genre
+from app.models.schemas import Artist, Track, Genre, Podcast
 from app.services.spotify_service import (
     get_top_artists_data,
     get_top_tracks_data,
@@ -36,6 +36,12 @@ from app.services.spotify_service import (
     search_artists_data,
     search_tracks_data,
     search_genres_data,
+    get_database_health,
+    get_all_podcasts,
+    add_podcast_data,
+    search_podcasts_data,
+    delete_podcast_data,
+    update_podcast_data
 )
 
 router = APIRouter()
@@ -207,3 +213,35 @@ def search_tracks(q: str = ""):
 @router.get("/search/genres")
 def search_genres(q: str = ""):
     return search_genres_data(q)
+
+@router.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "message": "Spotify Analytics API is running"
+    }
+
+@router.get("/health/database")
+def database_health():
+    return get_database_health()
+
+@router.get("/podcasts")
+def get_podcasts():
+    return get_all_podcasts()
+
+
+@router.post("/podcasts")
+def add_podcast(podcast: Podcast):
+    return add_podcast_data(podcast)
+
+@router.get("/search/podcasts")
+def search_podcasts(q: str = ""):
+    return search_podcasts_data(q)
+
+@router.delete("/podcasts/{podcast_name}")
+def delete_podcast(podcast_name: str):
+    return delete_podcast_data(podcast_name)
+
+@router.put("/podcasts/{podcast_name}")
+def update_podcast(podcast_name: str, podcast: Podcast):
+    return update_podcast_data(podcast_name, podcast)    

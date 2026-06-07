@@ -22,3 +22,13 @@ class GenreDB(Base):
     id = Column(Integer, primary_key=True, index=True)
     genre = Column(String, nullable=False)
     hours_listened = Column(Integer, nullable=False)
+
+class PodcastDB(Base):
+    __tablename__ = "podcasts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    podcast_name = Column(String, unique=True, index=True)
+    host = Column(String)
+    category = Column(String)
+    episodes = Column(Integer)
+    hours_listened = Column(Integer)

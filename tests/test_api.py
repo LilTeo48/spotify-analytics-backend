@@ -111,4 +111,39 @@ def test_top_genres_filter_sort_limit():
     data = response.json()
 
     assert "top_genres" in data
-    assert len(data["top_genres"]) <= 2    
+    assert len(data["top_genres"]) <= 2  
+
+def test_health_endpoint():
+    response = client.get("/health")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["status"] == "ok"
+
+
+def test_database_health_endpoint():
+    response = client.get("/health/database")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "status" in data
+
+def test_get_podcasts_endpoint():
+    response = client.get("/podcasts")
+
+    assert response.status_code == 200
+
+
+def test_search_podcasts_endpoint():
+    response = client.get("/search/podcasts?q=pard")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "podcasts" in data
+    assert isinstance(data["podcasts"], list)          

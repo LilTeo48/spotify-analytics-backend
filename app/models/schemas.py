@@ -17,4 +17,11 @@ class ListeningSummary(BaseModel):
     total_hours: int 
     favorite_artist: str 
     favorite_genre: str 
-    total_tracks_streamed: int 
+    total_tracks_streamed: int
+
+class Podcast(BaseModel):
+    podcast_name: str
+    host: str
+    category: str
+    episodes: int
+    hours_listened: int

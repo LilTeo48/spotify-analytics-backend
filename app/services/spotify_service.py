@@ -1,6 +1,6 @@
 from app.database.db import SessionLocal
-from app.models.db_models import ArtistDB, TrackDB, GenreDB
-
+from app.models.db_models import ArtistDB, TrackDB, GenreDB, PodcastDB
+from sqlalchemy import text
 
 def get_top_artists_data(
     min_streams: int = 0,
@@ -991,7 +991,142 @@ def search_genres_data(q: str = ""):
         ]
         return {"genres": result}
     finally:
-        db.close()    
+        db.close() 
 
+def get_database_health():
+    db = SessionLocal()
+
+    try:
+        db.execute(text("SELECT 1"))
+
+        return {
+            "status": "ok",
+            "database": "connected"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "database": str(e)
+        }
+    finally:
+        db.close() 
+
+def get_all_podcasts():
+    db = SessionLocal()
+
+    try:
+        podcasts = db.query(PodcastDB).all()
+
+        return [
+            {
+                "podcast_name": podcast.podcast_name,
+                "host": podcast.host,
+                "category": podcast.category,
+                "episodes": podcast.episodes,
+                "hours_listened": podcast.hours_listened
+            }
+            for podcast in podcasts
+        ]
+
+    finally:
+        db.close()
+
+
+def add_podcast_data(podcast):
+    db = SessionLocal()
+
+    try:
+        new_podcast = PodcastDB(
+            podcast_name=podcast.podcast_name,
+            host=podcast.host,
+            category=podcast.category,
+            episodes=podcast.episodes,
+            hours_listened=podcast.hours_listened
+        )
+
+        db.add(new_podcast)
+        db.commit()
+
+        return {
+            "message": "Podcast added successfully"
+        }
+
+    finally:
+        db.close()
+
+def search_podcasts_data(q: str = ""):
+    db = SessionLocal()
+
+    try:
+        podcasts = (
+            db.query(PodcastDB)
+            .filter(
+                PodcastDB.podcast_name.ilike(f"%{q}%")
+            )
+            .all()
+        )
+
+        result = [
+            {
+                "podcast_name": podcast.podcast_name,
+                "host": podcast.host,
+                "category": podcast.category,
+                "episodes": podcast.episodes,
+                "hours_listened": podcast.hours_listened
+            }
+            for podcast in podcasts
+        ]
+        return {"podcasts": result}
+    finally:
+        db.close()            
+
+def delete_podcast_data(podcast_name: str):
+    db = SessionLocal()
+
+    try:
+        podcast = (
+            db.query(PodcastDB)
+            .filter(PodcastDB.podcast_name == podcast_name)
+            .first()
+        )
+        if podcast is None:
+            return {
+                "message": "Podcast not found"
+            }
+        db.delete(podcast)
+        db.commit()
+
+        return {
+            "message": f"{podcast_name} deleted successfully"
+        }
+    finally: 
+        db.close()
+
+def update_podcast_data(podcast_name: str,podcast):
+    db = SessionLocal()
+
+    try:
+        existing_podcast = (
+            db.query(PodcastDB)
+            .filter(PodcastDB.podcast_name == podcast_name)
+            .first()
+        )
+        if existing_podcast is None:
+            return {
+                "message": "Podcast not found"
+            }
+        existing_podcast.host = podcast.host
+        existing_podcast.category = podcast.category
+        existing_podcast.episodes = podcast.episodes
+        existing_podcast.hours_listened = podcast.hours_listened
+
+        db.commit()
+
+        return{
+            "message": f"{podcast_name} updated successfully"
+        }
+    finally: 
+        db.close()            
+        
         
 
