@@ -1126,7 +1126,27 @@ def update_podcast_data(podcast_name: str,podcast):
             "message": f"{podcast_name} updated successfully"
         }
     finally: 
-        db.close()            
+        db.close()
+
+def get_top_podcasts():
+    db = SessionLocal()
+
+    try:
+        podcasts = (
+            db.query(PodcastDB)
+            .order_by(PodcastDB.hours_listened.desc())
+            .all()
+        )
+
+        return [
+            {
+                "podcast_name": podcast.podcast_name,
+                "hours_listened": podcast.hours_listened
+            }
+            for podcast in podcasts
+        ]
+    finally:
+        db.close()                       
         
         
 

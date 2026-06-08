@@ -41,7 +41,8 @@ from app.services.spotify_service import (
     add_podcast_data,
     search_podcasts_data,
     delete_podcast_data,
-    update_podcast_data
+    update_podcast_data,
+    get_top_podcasts
 )
 
 router = APIRouter()
@@ -244,4 +245,8 @@ def delete_podcast(podcast_name: str):
 
 @router.put("/podcasts/{podcast_name}")
 def update_podcast(podcast_name: str, podcast: Podcast):
-    return update_podcast_data(podcast_name, podcast)    
+    return update_podcast_data(podcast_name, podcast)
+
+@router.get("/podcasts/top")
+def top_podcasts():
+    return get_top_podcasts()
