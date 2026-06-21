@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.models.schemas import Artist, Track, Genre, Podcast
+from app.models.schemas import Artist, Track, Genre, Podcast, ListeningSummary
+from fastapi import HTTPException
 from app.services.spotify_service import (
     get_top_artists_data,
     get_top_tracks_data,
@@ -48,7 +49,7 @@ from app.services.spotify_service import (
 router = APIRouter()
 
 
-@router.get("/top-artists")
+@router.get("/top-artists", response_model=list[Artist])
 def get_top_artists(
     min_streams: int = 0,
     limit: int = 10,
@@ -70,12 +71,11 @@ def update_top_artist(artist_name: str, updated_artist: Artist):
 def delete_top_artist(artist_name: str):
     return delete_top_artist_data(artist_name)
 
-@router.get("/top-tracks")
+@router.get("/top-tracks", response_model=list[Track])
 def get_top_tracks(
     artist: str = "",
     limit: int = 10,
     sort_order: str = "desc"
-
 ):
     return get_top_tracks_data(artist, limit, sort_order)
 
@@ -93,14 +93,13 @@ def update_top_track(track_name: str, updated_track: Track):
 def delete_top_track(track_name: str):
     return delete_top_track_data(track_name)
 
-@router.get("/top-genres")
+@router.get("/top-genres", response_model=list[Genre])
 def get_top_genres(
     min_hours: int = 0,
     limit: int = 10,
     sort_order: str = "desc"
 ):
     return get_top_genres_data(min_hours, limit, sort_order)
-
 @router.post("/top-genres")
 def add_top_genre(genre: Genre):
     return add_top_genre_data(genre)
@@ -116,7 +115,7 @@ def delete_top_genre(genre_name: str):
     return delete_top_genre_data(genre_name)
 
 
-@router.get("/listening-summary")
+@router.get("/listening-summary", response_model=ListeningSummary)
 def get_listening_summary():
     return get_listening_summary_data()
 
@@ -226,7 +225,7 @@ def health_check():
 def database_health():
     return get_database_health()
 
-@router.get("/podcasts")
+@router.get("/podcasts", response_model=list[Podcast])
 def get_podcasts():
     return get_all_podcasts()
 
@@ -241,12 +240,22 @@ def search_podcasts(q: str = ""):
 
 @router.delete("/podcasts/{podcast_name}")
 def delete_podcast(podcast_name: str):
-    return delete_podcast_data(podcast_name)
+    result = delete_podcast_data(podcast_name)
+
+    if not result:
+        raise HTTPException(status_code=404, detail="Podcast not found")
+
+    return result
 
 @router.put("/podcasts/{podcast_name}")
 def update_podcast(podcast_name: str, podcast: Podcast):
-    return update_podcast_data(podcast_name, podcast)
+    result = update_podcast_data(podcast_name, podcast)
 
-@router.get("/podcasts/top")
+    if not result:
+        raise HTTPException(status_code=404, detail="Podcast not found")
+
+    return result
+
+@router.get("/podcasts/top", response_model=list[Podcast])
 def top_podcasts():
     return get_top_podcasts()
