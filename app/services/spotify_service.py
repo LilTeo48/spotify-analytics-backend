@@ -1146,7 +1146,20 @@ def get_top_podcasts():
             for podcast in podcasts
         ]
     finally:
-        db.close()                       
-        
-        
+        db.close()   
+
+def get_database_summary_analytics():
+    db = SessionLocal()
+
+    try:
+        return {
+            "artist_count": db.query(ArtistDB).count(),
+            "track_count": db.query(TrackDB).count(),
+            "genre_count": db.query(GenreDB).count(),
+            "podcast_count": db.query(PodcastDB).count()
+        }
+
+    finally:
+        db.close()        
+
 

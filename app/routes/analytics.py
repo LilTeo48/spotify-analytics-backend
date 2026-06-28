@@ -43,7 +43,8 @@ from app.services.spotify_service import (
     search_podcasts_data,
     delete_podcast_data,
     update_podcast_data,
-    get_top_podcasts
+    get_top_podcasts,
+    get_database_summary_analytics
 )
 
 router = APIRouter()
@@ -139,6 +140,10 @@ def get_dashboard():
 @router.get("/analytics/counts")
 def get_counts():
     return get_counts_analytics()
+
+@router.get("/analytics/database-summary")
+def get_database_summary():
+    return get_database_summary_analytics()
 
 @router.get("/analytics/total-streams")
 def get_total_streams():
