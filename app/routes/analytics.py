@@ -50,7 +50,7 @@ from app.services.spotify_service import (
 router = APIRouter()
 
 
-@router.get("/top-artists", response_model=list[Artist])
+@router.get("/top-artists")
 def get_top_artists(
     min_streams: int = 0,
     limit: int = 10,
@@ -72,7 +72,7 @@ def update_top_artist(artist_name: str, updated_artist: Artist):
 def delete_top_artist(artist_name: str):
     return delete_top_artist_data(artist_name)
 
-@router.get("/top-tracks", response_model=list[Track])
+@router.get("/top-tracks")
 def get_top_tracks(
     artist: str = "",
     limit: int = 10,
@@ -80,6 +80,7 @@ def get_top_tracks(
 ):
     return get_top_tracks_data(artist, limit, sort_order)
 
+    
 @router.post("/top-tracks")
 def add_top_track(track: Track):
     return add_top_track_data(track)
@@ -94,13 +95,14 @@ def update_top_track(track_name: str, updated_track: Track):
 def delete_top_track(track_name: str):
     return delete_top_track_data(track_name)
 
-@router.get("/top-genres", response_model=list[Genre])
+@router.get("/top-genres")
 def get_top_genres(
     min_hours: int = 0,
     limit: int = 10,
     sort_order: str = "desc"
 ):
     return get_top_genres_data(min_hours, limit, sort_order)
+
 @router.post("/top-genres")
 def add_top_genre(genre: Genre):
     return add_top_genre_data(genre)

@@ -2,6 +2,7 @@ from app.database.db import SessionLocal
 from app.models.db_models import ArtistDB, TrackDB, GenreDB, PodcastDB
 from sqlalchemy import text
 
+
 def get_top_artists_data(
     min_streams: int = 0,
     limit: int = 10,
@@ -14,6 +15,7 @@ def get_top_artists_data(
             db.query(ArtistDB)
             .filter(ArtistDB.streams >= min_streams)
         )
+
         if sort_order == "asc":
             query = query.order_by(
                 ArtistDB.streams.asc()
@@ -22,6 +24,7 @@ def get_top_artists_data(
             query = query.order_by(
                 ArtistDB.streams.desc()
             )
+
         artists = query.limit(limit).all()
 
         result = [
@@ -36,7 +39,8 @@ def get_top_artists_data(
         return {"top_artists": result}
 
     finally:
-        db.close()            
+        db.close()
+
 
 def get_top_tracks_data(
     artist: str = "",
@@ -52,10 +56,15 @@ def get_top_tracks_data(
             query = query.filter(
                 TrackDB.artist.ilike(f"%{artist}%")
             )
+
         if sort_order == "asc":
-            query = query.order_by(TrackDB.streams.asc())
+            query = query.order_by(
+                TrackDB.streams.asc()
+            )
         else:
-            query = query.order_by(TrackDB.streams.desc())
+            query = query.order_by(
+                TrackDB.streams.desc()
+            )
 
         tracks = query.limit(limit).all()
 
@@ -71,8 +80,9 @@ def get_top_tracks_data(
 
         return {"top_tracks": result}
 
-    finally: 
-        db.close()                
+    finally:
+        db.close()
+
 
 def get_top_genres_data(
     min_hours: int = 0,
@@ -111,8 +121,8 @@ def get_top_genres_data(
 
         return {"top_genres": result}
 
-    finally: 
-        db.close()            
+    finally:
+        db.close()          
 
 
 def get_listening_summary_data():

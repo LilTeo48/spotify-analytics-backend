@@ -1,5 +1,5 @@
 from app.database.db import SessionLocal
-from app.models.db_models import ArtistDB, TrackDB, GenreDB
+from app.models.db_models import ArtistDB, TrackDB, GenreDB, PodcastDB
 
 seed_artists = [
     {"artist": "Drake", "streams": 1250},
@@ -23,36 +23,66 @@ seed_genres = [
     {"genre": "Pop", "hours_listened": 40},
 ]
 
+seed_podcasts = [
+    {
+        "podcast_name": "The Joe Rogan Experience",
+        "host": "Joe Rogan",
+        "category": "Comedy",
+        "episodes": 2325,
+        "hours_listened": 42
+    },
+    {
+        "podcast_name": "Lex Fridman Podcast",
+        "host": "Lex Fridman",
+        "category": "Technology",
+        "episodes": 485,
+        "hours_listened": 36
+    },
+    {
+        "podcast_name": "Huberman Lab",
+        "host": "Andrew Huberman",
+        "category": "Health",
+        "episodes": 230,
+        "hours_listened": 28
+    },
+    {
+        "podcast_name": "Darknet Diaries",
+        "host": "Jack Rhysider",
+        "category": "Cybersecurity",
+        "episodes": 165,
+        "hours_listened": 19
+    },
+    {
+        "podcast_name": "Waveform",
+        "host": "Marques Brownlee",
+        "category": "Technology",
+        "episodes": 270,
+        "hours_listened": 15
+    }
+]
+
 
 def seed_db():
     db = SessionLocal()
 
     try:
-        db.query(ArtistDB).delete()
-        db.query(TrackDB).delete()
+        # Clear existing data
+        db.query(PodcastDB).delete()
         db.query(GenreDB).delete()
+        db.query(TrackDB).delete()
+        db.query(ArtistDB).delete()
 
         for artist in seed_artists:
-            new_artist = ArtistDB(
-                artist=artist["artist"],
-                streams=artist["streams"]
-            )
-            db.add(new_artist)
+            db.add(ArtistDB(**artist))
 
         for track in seed_tracks:
-            new_track = TrackDB(
-                track=track["track"],
-                artist=track["artist"],
-                streams=track["streams"]
-            )
-            db.add(new_track)
+            db.add(TrackDB(**track))
 
         for genre in seed_genres:
-            new_genre = GenreDB(
-                genre=genre["genre"],
-                hours_listened=genre["hours_listened"]
-            )
-            db.add(new_genre)
+            db.add(GenreDB(**genre))
+
+        for podcast in seed_podcasts:
+            db.add(PodcastDB(**podcast))
 
         db.commit()
         print("Database seeded successfully.")
