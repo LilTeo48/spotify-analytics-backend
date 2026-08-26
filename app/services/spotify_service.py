@@ -197,7 +197,7 @@ def delete_top_artist_data(artist_name: str):
         )
 
         if not artist:
-            return {"message": "Artist not found"}
+            return None
 
         db.delete(artist)
         db.commit()
@@ -221,8 +221,8 @@ def update_top_artist_data(artist_name: str, updated_artist):
         )
 
         if not artist:
-            return {"message": "Artist not found"}
-
+            return None
+        
         artist.artist = updated_artist.artist
         artist.streams = updated_artist.streams
 
@@ -280,7 +280,7 @@ def update_top_track_data(track_name: str, updated_track):
         )
 
         if not track:
-            return {"message": "Track not found"}
+            return None
 
         track.track = updated_track.track
         track.artist = updated_track.artist
@@ -314,7 +314,7 @@ def delete_top_track_data(track_name: str):
         )
 
         if not track:
-            return {"message": "Track not found"}
+            return None
 
         db.delete(track)
         db.commit()
@@ -363,7 +363,7 @@ def update_top_genre_data(genre_name: str, updated_genre):
         )
 
         if not genre:
-            return {"message": "Genre not found"}
+            return None
 
         genre.genre = updated_genre.genre
         genre.hours_listened = updated_genre.hours_listened
@@ -395,7 +395,7 @@ def delete_top_genre_data(genre_name: str):
         )
 
         if not genre:
-            return {"message": "Genre not found"}
+            return None
 
         db.delete(genre)
         db.commit()
@@ -1100,9 +1100,7 @@ def delete_podcast_data(podcast_name: str):
             .first()
         )
         if podcast is None:
-            return {
-                "message": "Podcast not found"
-            }
+            return None
         db.delete(podcast)
         db.commit()
 
@@ -1122,9 +1120,8 @@ def update_podcast_data(podcast_name: str,podcast):
             .first()
         )
         if existing_podcast is None:
-            return {
-                "message": "Podcast not found"
-            }
+            return None
+            
         existing_podcast.host = podcast.host
         existing_podcast.category = podcast.category
         existing_podcast.episodes = podcast.episodes
@@ -1151,12 +1148,16 @@ def get_top_podcasts():
         return [
             {
                 "podcast_name": podcast.podcast_name,
+                "host": podcast.host,
+                "category": podcast.category,
+                "episodes": podcast.episodes,
                 "hours_listened": podcast.hours_listened
             }
             for podcast in podcasts
         ]
+
     finally:
-        db.close()   
+        db.close() 
 
 def get_database_summary_analytics():
     db = SessionLocal()

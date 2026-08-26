@@ -1,6 +1,20 @@
-from fastapi import APIRouter
-from app.models.schemas import Artist, Track, Genre, Podcast, ListeningSummary
-from fastapi import HTTPException
+from typing import Literal
+from fastapi import APIRouter, HTTPException, Query
+from app.models.schemas import (
+    Artist,
+    Track,
+    Genre,
+    Podcast,
+    ListeningSummary,
+    TopArtistAnalytics,
+    TopTrackAnalytics,
+    TopGenreAnalytics,
+    DashboardAnalytics,
+    CountsAnalytics,
+    TotalStreamsAnalytics,
+    TotalHoursAnalytics,
+)
+
 from app.services.spotify_service import (
     get_top_artists_data,
     get_top_tracks_data,
@@ -52,9 +66,9 @@ router = APIRouter()
 
 @router.get("/top-artists")
 def get_top_artists(
-    min_streams: int = 0,
-    limit: int = 10,
-    sort_order: str = "desc"
+    min_streams: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
+    sort_order: Literal["asc", "desc"] = "desc"
 ):
     return get_top_artists_data(min_streams, limit, sort_order)
 
@@ -65,21 +79,37 @@ def add_top_artist(artist: Artist):
 
 @router.put("/top-artists/{artist_name}")
 def update_top_artist(artist_name: str, updated_artist: Artist):
-    return update_top_artist_data(artist_name, updated_artist)
+    result = update_top_artist_data(artist_name, updated_artist)
+
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Artist not found"
+        )
+
+    return result
 
 
 @router.delete("/top-artists/{artist_name}")
 def delete_top_artist(artist_name: str):
-    return delete_top_artist_data(artist_name)
+    result = delete_top_artist_data(artist_name)
+
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Artist not found"
+        )
+
+    return result
+
 
 @router.get("/top-tracks")
 def get_top_tracks(
     artist: str = "",
-    limit: int = 10,
-    sort_order: str = "desc"
+    limit: int = Query(default=10, ge=1, le=100),
+    sort_order: Literal["asc", "desc"] = "desc"
 ):
     return get_top_tracks_data(artist, limit, sort_order)
-
     
 @router.post("/top-tracks")
 def add_top_track(track: Track):
@@ -88,18 +118,34 @@ def add_top_track(track: Track):
 
 @router.put("/top-tracks/{track_name}")
 def update_top_track(track_name: str, updated_track: Track):
-    return update_top_track_data(track_name, updated_track)
+    result = update_top_track_data(track_name, updated_track)
+
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Track not found"
+        )
+
+    return result
 
 
 @router.delete("/top-tracks/{track_name}")
 def delete_top_track(track_name: str):
-    return delete_top_track_data(track_name)
+    result = delete_top_track_data(track_name)
+
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Track not found"
+        )
+
+    return result
 
 @router.get("/top-genres")
 def get_top_genres(
-    min_hours: int = 0,
-    limit: int = 10,
-    sort_order: str = "desc"
+    min_hours: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
+    sort_order: Literal["asc", "desc"] = "desc"
 ):
     return get_top_genres_data(min_hours, limit, sort_order)
 
@@ -110,50 +156,73 @@ def add_top_genre(genre: Genre):
 
 @router.put("/top-genres/{genre_name}")
 def update_top_genre(genre_name: str, updated_genre: Genre):
-    return update_top_genre_data(genre_name, updated_genre)
+    result = update_top_genre_data(genre_name, updated_genre)
+
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Genre not found"
+        )
+
+    return result
 
 
 @router.delete("/top-genres/{genre_name}")
 def delete_top_genre(genre_name: str):
-    return delete_top_genre_data(genre_name)
+    result = delete_top_genre_data(genre_name)
+
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Genre not found"
+        )
+
+    return result
 
 
 @router.get("/listening-summary", response_model=ListeningSummary)
 def get_listening_summary():
     return get_listening_summary_data()
 
-@router.get("/analytics/top-artist")
+@router.get("/analytics/top-artist", response_model=TopArtistAnalytics)
 def get_top_artist():
     return get_top_artist_analytics()
 
-@router.get("/analytics/top-track")
+
+@router.get("/analytics/top-track", response_model=TopTrackAnalytics)
 def get_top_track():
     return get_top_track_analytics()
 
-
-@router.get("/analytics/top-genre")
+@router.get("/analytics/top-genre", response_model=TopGenreAnalytics)
 def get_top_genre():
     return get_top_genre_analytics()
 
-@router.get("/analytics/dashboard")
-def get_dashboard():
-    return get_dashboard_analytics()
 
-@router.get("/analytics/counts")
+
+
+@router.get("/analytics/counts", response_model=CountsAnalytics)
 def get_counts():
     return get_counts_analytics()
+
+
+@router.get("/analytics/total-streams", response_model=TotalStreamsAnalytics)
+def get_total_streams():
+    return get_total_streams_analytics()
+
+
+@router.get("/analytics/total-hours", response_model=TotalHoursAnalytics)
+def get_total_hours():
+    return get_total_hours_analytics()
+
+
+@router.get("/analytics/dashboard", response_model=DashboardAnalytics)
+def get_dashboard():
+    return get_dashboard_analytics()
 
 @router.get("/analytics/database-summary")
 def get_database_summary():
     return get_database_summary_analytics()
 
-@router.get("/analytics/total-streams")
-def get_total_streams():
-    return get_total_streams_analytics()
-
-@router.get("/analytics/total-hours")
-def get_total_hours():
-    return get_total_hours_analytics()
 
 @router.get("/analytics/top-3-artists")
 def get_top_3_artists():
