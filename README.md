@@ -604,22 +604,14 @@ The CI workflow is designed to run the test suite when code changes are pushed o
 
 This helps catch regressions before changes are merged into the main branch.
 
-Docker
+## Docker & PostgreSQL
 
-The project includes Docker and Docker Compose support.
+The application has been verified running in Docker with FastAPI connected to PostgreSQL.
 
-Build the image:
+Start the stack:
 
-docker build -t spotify-analytics-backend .
-
-Run the container:
-
-docker run -p 8000:8000 spotify-analytics-backend
-
-Docker Compose can also be used to run the API alongside PostgreSQL.
-
-Production-style Docker and PostgreSQL verification will be completed during the final hardening stage.
-
+```bash
+docker compose up --build -d
 Database Support
 
 The application supports:
