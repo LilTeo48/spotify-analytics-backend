@@ -606,22 +606,65 @@ This helps catch regressions before changes are merged into the main branch.
 
 ## Docker & PostgreSQL
 
+
 The application has been verified running in Docker with FastAPI connected to PostgreSQL.
 
 Start the stack:
 
 ```bash
 docker compose up --build -d
+Docker services:
+
+FastAPI API: http://127.0.0.1:8001
+PostgreSQL host port: 5434
+Internal PostgreSQL connection: db:5432
+
+The PostgreSQL service includes a Docker health check using pg_isready. The FastAPI service waits until PostgreSQL reports healthy before starting.
+
+Verify the running services:
+
+docker compose ps
+
+Application health checks:
+
+curl http://127.0.0.1:8001/health
+curl http://127.0.0.1:8001/health/database
 Database Support
 
 The application supports:
 
-SQLite for local development
-PostgreSQL for production-style environments
+SQLite for local development and automated tests
+PostgreSQL for the Docker-based production-style environment
 
 SQLAlchemy provides the ORM layer between FastAPI and the configured relational database.
 
 The local SQLite database is intentionally excluded from Git tracking.
+
+
+Save it, then run:
+
+```bash
+git diff --check
+git diff README.md
+
+If that looks good:
+
+git add README.md
+git commit -m "Finalize Docker deployment documentation"
+
+Then one last regression check:
+
+pytest
+git status
+
+If the 38 tests pass again, push:
+
+git push origin main
+
+Then:
+
+git status
+git log --oneline -5
 
 Repository Hygiene
 
