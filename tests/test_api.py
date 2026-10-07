@@ -510,6 +510,10 @@ def test_track_ranking_endpoint():
 
 
 def test_spotify_artist_search_endpoint(monkeypatch):
+    # Dummy credentials keep this test independent from real Spotify secrets.
+    monkeypatch.setenv("SPOTIFY_CLIENT_ID", "test-client-id")
+    monkeypatch.setenv("SPOTIFY_CLIENT_SECRET", "test-client-secret")
+
     mock_artist = {
         "id": "2YZyLoL8N0Wb9xBt1NhZWg",
         "name": "Kendrick Lamar",
@@ -540,3 +544,50 @@ def test_spotify_artist_search_endpoint(monkeypatch):
     assert data["name"] == "Kendrick Lamar"
     assert "spotify_url" in data
     assert "images" in data
+
+
+def test_spotify_track_search_endpoint(monkeypatch):
+    # Dummy credentials keep this test independent from real Spotify secrets.
+    monkeypatch.setenv("SPOTIFY_CLIENT_ID", "test-client-id")
+    monkeypatch.setenv("SPOTIFY_CLIENT_SECRET", "test-client-secret")
+
+    mock_track = {
+        "id": "6AI3ezQ4o3HUoP6Dhudph3",
+        "name": "Not Like Us",
+        "artists": [
+            {
+                "name": "Kendrick Lamar"
+            }
+        ],
+        "album": {
+            "name": "Not Like Us"
+        },
+        "external_urls": {
+            "spotify": "https://open.spotify.com/track/6AI3ezQ4o3HUoP6Dhudph3"
+        },
+        "duration_ms": 274192,
+    }
+
+    def mock_search_track(self, track_name):
+        return mock_track
+
+    monkeypatch.setattr(
+        "app.routes.spotify.SpotifyClient.search_track",
+        mock_search_track,
+    )
+
+    response = client.get(
+        "/spotify/tracks/search",
+        params={"name": "Not Like Us"},
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["spotify_id"] == "6AI3ezQ4o3HUoP6Dhudph3"
+    assert data["name"] == "Not Like Us"
+    assert data["artists"] == ["Kendrick Lamar"]
+    assert data["album"] == "Not Like Us"
+    assert "spotify_url" in data
+    assert data["duration_ms"] == 274192

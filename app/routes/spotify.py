@@ -35,3 +35,35 @@ def search_artist(
             status_code=exc.response.status_code,
             detail="Spotify API request failed",
         ) from exc
+
+
+@router.get("/tracks/search")
+def search_track(
+    name: str = Query(..., min_length=1, description="Track name to search for")
+):
+    try:
+        track = SpotifyClient().search_track(name)
+
+        if track is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Track '{name}' not found",
+            )
+
+        return {
+            "spotify_id": track["id"],
+            "name": track["name"],
+            "artists": [
+                artist["name"]
+                for artist in track.get("artists", [])
+            ],
+            "album": track.get("album", {}).get("name"),
+            "spotify_url": track["external_urls"]["spotify"],
+            "duration_ms": track.get("duration_ms"),
+        }
+
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail="Spotify API request failed",
+        ) from exc

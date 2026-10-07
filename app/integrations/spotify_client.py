@@ -54,3 +54,30 @@ class SpotifyClient:
             return None
 
         return artists[0]
+
+    def search_track(self, track_name: str) -> dict | None:
+        access_token = self.get_access_token()
+
+        response = httpx.get(
+            f"{SPOTIFY_API_BASE_URL}/search",
+            headers={
+                "Authorization": f"Bearer {access_token}"
+            },
+            params={
+                "q": track_name,
+                "type": "track",
+                "limit": 1,
+            },
+            timeout=10.0,
+        )
+
+        response.raise_for_status()
+
+        tracks = response.json().get(
+            "tracks", {}
+        ).get("items", [])
+
+        if not tracks:
+            return None
+
+        return tracks[0]
