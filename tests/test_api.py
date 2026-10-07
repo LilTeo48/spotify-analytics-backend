@@ -506,4 +506,37 @@ def test_track_ranking_endpoint():
     data = response.json()
 
     assert "track_stream_ranking" in data
-    assert isinstance(data["track_stream_ranking"], list)                               
+    assert isinstance(data["track_stream_ranking"], list)
+
+
+def test_spotify_artist_search_endpoint(monkeypatch):
+    mock_artist = {
+        "id": "2YZyLoL8N0Wb9xBt1NhZWg",
+        "name": "Kendrick Lamar",
+        "external_urls": {
+            "spotify": "https://open.spotify.com/artist/2YZyLoL8N0Wb9xBt1NhZWg"
+        },
+        "images": [],
+    }
+
+    def mock_search_artist(self, artist_name):
+        return mock_artist
+
+    monkeypatch.setattr(
+        "app.routes.spotify.SpotifyClient.search_artist",
+        mock_search_artist,
+    )
+
+    response = client.get(
+        "/spotify/artists/search",
+        params={"name": "Kendrick Lamar"},
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["spotify_id"] == "2YZyLoL8N0Wb9xBt1NhZWg"
+    assert data["name"] == "Kendrick Lamar"
+    assert "spotify_url" in data
+    assert "images" in data
